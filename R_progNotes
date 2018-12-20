@@ -1,0 +1,46 @@
+vectors:
+  are like lists
+  they are heterogeneous in nature
+
+  syntax: v = c(1,2,3) or b = c('Sam', 'sally')
+
+  To create a python dictionary equivalent in R we can use "names" on lists
+  Ex:
+    > roulette_vector <- c(-24, -50, 100, -350, 10)
+    > names(roulette_vector) <- c( "Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+    > roulette_vector['Thursday']
+      Thursday
+      -350
+
+  Add op on vectors: performs element wise addition
+  > A_vector <- c(1, 2, 3)
+  > B_vector <- c(4, 5, 6)
+  >  A_vector + B_vector
+      [1] 5 7 9
+
+  sum: builtin function to add all elements
+
+  Indexing:
+  > poker_vector <- c(140, -50, 20, -120, 240)
+  > poker_vector[1]
+  [1] 140
+  > poker_vector[c(1,2)]
+  [1] 140 -50
+
+  Inclusive Indexing
+  > poker_vector[1:3]
+  [1] 140 -50  20
+
+
+  Logical ops:
+  The (logical) comparison operators known to R are:
+
+      < for less than
+      > for greater than
+      <= for less than or equal to
+      >= for greater than or equal to
+      == for equal to each other
+      != not equal to each other
+
+  > c(4, 5, 6) > 5
+  [1] FALSE FALSE TRUE
