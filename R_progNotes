@@ -334,9 +334,125 @@ Matrices and Arrays:
 
   Adding dim() attribute to a atomic vector makes it a matrix so that it can be used a n-dimensional array from 1d Array
 
-  
+  ```t()```
+  can be used to transpose a matrix
+
+  ```is.matrix()```
+  to check is object is matrix
+
+  ```is.array()```
+  to check is object is Array
+
+  ```as.matrix()```
+  to convert a vector into a matrix
+
+  ```as.array()```
+  to convert a vector into an Array
+
+  different kinds of vectors:
+  > str(1:3)
+   int [1:3] 1 2 3
+  > str(matrix(1:3,ncol=1))
+   int [1:3, 1] 1 2 3
+  > str(matrix(1:3,nrow=1))
+   int [1, 1:3] 1 2 3
+  > str(array(1:3,3))
+   int [1:3(1d)] 1 2 3
 
 
+
+  The dim attribute can also be set to lists to make them list-matrices or list-arrays
+  > l  = list(1:3, 'a', T,1.0)
+  > l
+  [[1]]
+  [1] 1 2 3
+
+  [[2]]
+  [1] "a"
+
+  [[3]]
+  [1] TRUE
+
+  [[4]]
+  [1] 1
+
+  > str(l)
+  List of 4
+   $ : int [1:3] 1 2 3
+   $ : chr "a"
+   $ : logi TRUE
+   $ : num 1
+  > dim(l) = c(2,2)
+  > l
+       [,1]      [,2]
+  [1,] Integer,3 TRUE
+  [2,] "a"       1
+  >
+
+
+  DataFrames:
+  Under the hood df are list of equal length Vectors. so its a 2d ds and shares the
+  attributes of matrix and list, so
+  names() gives column names
+  colnames() gives column names
+  rownames() gives row names
+  lenght() and ncol() gives number of columns
+  nrow() gives number of rows
+
+  Creating df:
+  1. can be created using named vectors
+    df = data.frame(x=1:3,y=c('a','b','c'))
+    str(df)
+    > df = data.frame(x=1:3,y=c('a','b','c'))
+    > str(df)
+    'data.frame':	3 obs. of  2 variables:
+     $ x: int  1 2 3
+     $ y: Factor w/ 3 levels "a","b","c": 1 2 3
+
+
+  by default data.frame treats all character as factor to avoid it use stringsAsFactors=F
+  > df = data.frame(x=1:3,y=c('a','b','c'), stringsAsFactors = FALSE)
+  > str(df)
+  'data.frame':	3 obs. of  2 variables:
+  $ x: int  1 2 3
+  $ y: chr  "a" "b" "c"
+
+  ```is.data.frame() or class(df)```
+  can tell whether a object is a df
+
+  on the other hand typeof(df) gives list because under the hood df is a list of Vectors
+
+    > typeof(df)
+    [1] "list"
+    > class(df)
+    [1] "data.frame"
+    > is.data.frame(df)
+    [1] TRUE
+
+  you can create dataframes from
+    lists: every element of list is Considered as a column so all of them should be of same length
+    matrix: creates a df with number of rows and columns are equal
+
+    ```cbind() and rbind()```
+    helps to create df by joining dfs columnwise and rowwise
+
+    > cbind(df, data.frame(z=3:1))
+        x y z
+      1 1 a 3
+      2 2 b 2
+      3 3 c 1
+    > rbind(df, data.frame(x=10,y="z"))
+         x y
+      1  1 a
+      2  2 b
+      3  3 c
+      4 10 z
+
+    Bad way of creating df from list of Vectors
+    df = data.frame(cbind(a=1:2, b=c('a','b')))
+
+    the correct way is
+    df = data.frame(a=1:2, b=c('a','b'))
 
 
 
