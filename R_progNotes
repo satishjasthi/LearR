@@ -1,6 +1,359 @@
+Data structures:
+  R has data structures based on dimensionality and type of data it can hold as shown below
+
+    Homogeneous         Heterogeneous
+1d Atomic vector        List
+2d Matrix               Data frame
+nd Array
+
+  R has no 0d data structures actually numbers and strings are 1d in R
+
+  ```str```
+    can be used to understand the structure of any data structure
+
 vectors:
-  are like lists
-  they are heterogeneous in nature
+  are the basic data structures in R. They come in 2 flavours
+    - atomic vectors
+    - lists
+
+  Vectors have these common properties
+    - typeof()
+    - length()
+    - attributes()
+
+  Difference between vector and list:
+    - vectors elements are Homogeneous
+    - list elements can be Heterogeneous
+
+  ```is.vector```
+      does not test whether an object is a vector or not, it returns true if the object has names as the only attribute.
+
+  ```is.atomic(x) or is.list(x)```
+      can be used to check if an object is vector
+
+
+  Atomic Vectors:
+    Types of Atomic Vectors:
+      - logical
+      - integer
+      - double
+      - character
+      Rare types: complex and raw
+
+    ```c()```
+      Atomic Vectors are created with
+
+    Ex:
+        dbl_var = c(1,2.5,3)
+        int_var = c(1L,6L,10L) L makes them integer rather than double
+        logical_var = c(TRUE, FALSE, T,F)
+        chr_var = c('these', "are strings")
+
+
+  Atomic vectors are always flat
+    Ex: c(1,c(2,c(3,4))) is same as c(1,2,3,4)
+
+
+  ```NA```
+  is a logical vector of length 1. NAs can have type like
+    NA_real_(double vector)
+    NA_integer_
+    NA_character_
+
+
+  ```typeof()```
+  can be used to determine the type of a data structure
+
+  ```is.character(), is.double(), is.integer(), is.logical() or is.atomic()```
+  can be used to check the respective types and if its a vector
+
+  ```is.numeric```
+  is true for both integer and double since both are numeric
+
+  Coercion or type casting:
+    R does coercion when you have different elements of a vector to most flexible data type.
+    To type cast the objects use
+    - as.double()
+    - as.integer()
+    - as.logical()
+
+    EX: when you use str and numbers
+        str(c('a',1))
+        > chr
+
+        x = c(F, T)
+        as.numeric(x)
+        > 0,1
+
+  Lists:
+    ```list()```
+    can used to create a list rather than c() which creates a vector
+
+    x = list(1:3,"a", c(T,T,F), c(2,3.))
+
+
+    lists can be also called recursive vectors because they'll have multiple vectors in them
+
+    Nested lists:
+    > x = list(list(list(list())))
+    > str(x)
+      List of 1
+      $ :List of 1
+      ..$ :List of 1
+      .. ..$ : list()
+
+    c() will coerce a list into plane vectors
+    > x = list(list(1,2), c(3,4))
+    > y = c(list(1,2), c(3,4))
+
+    > str(x)
+      List of 2
+       $ :List of 2
+        ..$ : num 1
+        ..$ : num 2
+       $ : num [1:2] 3 4
+
+     > str(y)
+     List of 4
+      $ : num 1
+      $ : num 2
+      $ : num 3
+      $ : num 4
+
+      here c() op has first converted vector to list and then made them into a single list
+
+
+      ```unlist```
+      can be used to turn a list back into a vector
+
+
+    Lists are the most important ds of R because dataframes and linear model objects are built using Lists
+    > is.list(mtcars)
+    [1] TRUE
+
+    > mod = lm(mpg~wt,data = mtcars)
+    > is.list(mod)
+    [1] TRUE
+
+
+    ?Why as.vector() cannot be used to convert a list into vector but unlist() can?
+    By default as.vector uses mode as any which tries to convert the elements to list, but we can
+    change the behavior by mentioning the mode as integer or double or logical (ie any of the atomic vector types)
+
+
+    ? why is 1=='1', because of coercion "1" is converted to int 1 and then compared
+    -1 < False is true because False is converted to 0
+    "one" < 2 is False because 'one' cannot be type casted to 1
+
+
+Attributes:
+  - used to store meta data about a objects
+  - they are like named list with unique names
+  - single attribute of a object can be assigned as
+    attr(x, 'attribute') = attribute_value
+
+    to access a attribute of a object
+    attr(x, 'attribute_name')
+
+  - to get all attributes of a object
+    attributes(y) or str(attributes(y))
+
+
+  ```structure()```
+  - can be used to modify the attribute of a object
+    x = structure(x, attrib_name=new_value)
+
+
+  By default most of the attributes of an object will be modified when ops are performed example
+  > a = c(1,2,3)
+  > attributes(a)
+  NULL
+  > names(a)
+  NULL
+  > class(a)
+  [1] "numeric"
+  > dim(a)
+  NULL
+  > attr(a, 'sig') = 'example'
+  > attributes(a)
+  $sig
+  [1] "example"
+
+  > attributes(a[1])
+  NULL
+  > y = sum(a)
+  > attributes(a)
+  $sig
+  [1] "example"
+
+  > attributes(y)
+  NULL
+
+  However every object will have three attributes always and they are
+    names(x)
+    class(x)
+    dim(x)
+
+    These shouldn't be accessed like the normal ones like
+    attr(x, 'names') is wrong
+
+
+
+Names:
+  are the attributes they can be assigned to a vector in three ways
+    1. when creating a vec:
+        x = c(a=1, b=2, c=3)
+
+    2.modifying inplace
+        x = 1:3; names(x) = c(a,b,c)
+
+    3. by creating a modified copy of a vector
+        x = setNames(1:3, c('a','b','c'))
+
+
+  Names need not be unique but they server better if they are unique for mapping or
+  lookup purpose
+
+  Not all of the vector elements need to have a name, if a element doesn't have a name
+  Null value will be returned
+
+  Ex: y = c(a=1,2,3)
+      names(y)
+      > 'a' '' ''
+
+  To remove names of a vector you can either use ```unname(x)``` or names(x) = NULL
+
+
+Factors:
+  A factor is a vector than can contain only pre-defined values and is used to store
+  categorical data.
+  Factors are built on integer vectors with new attributes:
+    class()
+    levels()
+
+    > x = factor(c('a','b','d','e','b'))
+    > levels(x)
+    [1] "a" "b" "d" "e"
+    > class(x)
+    [1] "factor"
+
+  You cannot add values that are not in factor vector's levels
+  > x[2] = 'c'
+    Warning message:
+    In `[<-.factor`(`*tmp*`, 2, value = "c") :
+      invalid factor level, NA generated
+
+  Pros of using a factor vector for discrete categorical columns:
+  > gender = c('m','m','m')
+  > gender_factor = factor(c('m','m','m'),levels = c('m','f'))
+  > table(gender)
+  gender
+  m
+  3
+  > table(gender_factor)
+  gender_factor
+  m f
+  3 0
+
+  Here in case of normal char vector it doesn't show count for all classes of a column
+  but gender_factor does
+
+  Sometimes while reading .csv files some numerical column as treated as factors because
+  they will have null values in the form of . or -. We resolve this as
+
+  > z = read.csv(text = "value\n12\n1\n. \n9")
+  > typeof(z$value)
+  [1] "integer"
+  > as.double(z$value)
+  [1] 3 2 1 4
+  > class(z$value)
+  [1] "factor"
+  > #convert to factor to get NA and then convert to double
+  > as.double(as.character(z$value))
+  [1] 12  1 NA  9
+  Warning message:
+  NAs introduced by coercion
+  > #you can see that . is converted into a NA
+
+  Or a much simpler way is while reading use arg na.string
+
+  > z = read.csv(text = "value\n12\n1\n. \n9", na.strings =". ")
+  > z$value
+  [1] 12  1 NA  9
+  > as.double(z$value)
+  [1] 12  1 NA  9
+
+  By default most of the data loading functions converts character vectors to Factors
+  you can suppress it using argument
+    stringsAsFactors = FALSE
+
+  or on a global level you can suppress the action of coercion of char to factor with
+  options(stringsAsFactors=FALSE), but this is not preferred
+
+  !!! Eventhough factors looks like characters they are actually integer vectors.
+
+  If you need string behavior from a Factors columns it suggested to explicitly convert them to
+  character
+  > a = factor(c('a','b','r','k','a'))
+  > class(a)
+  [1] "factor"
+  > #to have a character behavior from a convert it to character
+  > b = as.character(a)
+  > class(b)
+  [1] "character"
+
+  ? Consider
+  > structure(a, scope='sample')
+  [1] 1 2 3 4 5
+  attr(,"scope")
+  [1] "sample"
+  > structure(a, comment='sample')
+  [1] 1 2 3 4 5
+
+  Why is not printing when comment is used as a attribute name?
+  because comment is an attribute specifically used for data.frames and models in r
+  and it doesn't print this attribute for other objects
+
+  ```rev()```
+    is a inbuilt function to reverse a vector
+
+  ? Are the levels of a factor column ordered values or more like unordered set value in python
+
+  Levels of a factor vector are ordered in nature.
+  > x
+  [1] a    <NA> d    e    b
+  Levels: a b d e
+  > levels(x) = rev(levels(x))
+  > x
+  [1] e    <NA> b    a    d
+  Levels: e d b a
+
+
+
+Matrices and Arrays:
+
+  Adding dim() attribute to a atomic vector makes it a matrix so that it can be used a n-dimensional array from 1d Array
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   syntax: v = c(1,2,3) or b = c('Sam', 'sally')
 
